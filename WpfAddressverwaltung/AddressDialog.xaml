@@ -1,0 +1,70 @@
+﻿<Window x:Class="WpfAddressverwaltung.AddressDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="AddressDialog"
+        Height="300"
+        Width="400"
+        ResizeMode="NoResize">
+    <StackPanel Margin="20">
+        <TextBlock Text="Neue Addresse hinzufügen:" FontWeight="Bold" Margin="0,0,0,10" />
+        
+        <StackPanel Margin="0,10,0,0"
+                    Width="300">
+            <TextBlock Text="Typ:" />
+            <TextBox x:Name="AddressTypeInput"/>
+        </StackPanel>
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <StackPanel Grid.Row="0" 
+                        Margin="0,10,0,0"
+                        Width="150">
+                <TextBlock Text="Straße:" />
+                <TextBox x:Name="AddressStreetInput" />
+            </StackPanel>
+            
+            <StackPanel Grid.Row="0" 
+                        Margin="0,10,0,0"
+                        Grid.Column="2"
+                        Width="150">
+                <TextBlock Text="Hausnummer:" />
+                <TextBox x:Name="AddressStreetNumberInput" />
+            </StackPanel>
+            
+            <StackPanel Grid.Column="0" 
+                        Grid.Row="1" 
+                        Margin="0,10,0,0"
+                        Width="150">
+                <TextBlock Text="Postleizahl:" />
+                <TextBox x:Name="AddressPostalInput" />
+            </StackPanel>
+            
+            <StackPanel Grid.Row="1" 
+                        Margin="0,10,0,0"
+                        Grid.Column="2"
+                        Width="150">
+                <TextBlock Text="Stadt:" />
+                <TextBox x:Name="AddressCityInput" />
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <Button Content="Hinzufügen" Click="AddButton_Click" Margin="5" />
+            <Button Content="Abbrechen" Click="CancelButton_Click" Margin="5" />
+        </StackPanel>
+    </StackPanel>
+</Window>
+

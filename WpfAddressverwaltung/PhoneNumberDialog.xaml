@@ -1,0 +1,53 @@
+﻿<Window x:Class="WpfAddressverwaltung.PhoneNumberDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Height="250"
+        Width="300"
+        ResizeMode="NoResize">
+    <StackPanel Margin="20">
+        <TextBlock Text="Neue Telefonnummer hinzufügen:"
+                   FontWeight="Bold"
+                   Margin="0,0,0,10" />
+
+        <StackPanel Margin="0,10,0,0"
+                    Width="200">
+            <TextBlock Text="Typ:" />
+            <TextBox x:Name="PhoneTypeInput" />
+        </StackPanel>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Width="100"
+                        Margin="0,10,0,0">
+                <TextBlock Text="Vorwahl:" />
+                <TextBox x:Name="PhonePrefixInput" />
+            </StackPanel>
+
+            <StackPanel Margin="0,10,0,0"
+                        Grid.Column="2"
+                        Width="100">
+                <TextBlock Text="Nummer:" />
+                <TextBox x:Name="PhoneSuffixInput" />
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,20,0,0">
+            <Button Content="Hinzufügen"
+                    Click="AddButton_Click"
+                    Margin="5" />
+            <Button Content="Abbrechen"
+                    Click="CancelButton_Click"
+                    Margin="5" />
+        </StackPanel>
+    </StackPanel>
+</Window>
