@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using WpfAddressverwaltung.Classes.EmployeeData;
+using WpfAddressverwaltung.Classes.EmployeeData.PhoneData;
 
 namespace WpfAddressverwaltung;
 

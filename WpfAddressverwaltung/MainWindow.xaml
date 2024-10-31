@@ -3,11 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfAddressverwaltung.Classes.EmployeeData.PhoneData"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         Title="Addressverwaltungstool"
         Height="650"
         Width="1000"
         ResizeMode="NoResize">
+
+    <Window.Resources>
+        <ObjectDataProvider MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}"
+                            x:Key="PhoneTypeEnumValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:PhoneTypeEnum" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -179,15 +192,17 @@
 
                         <StackPanel>
                             <TextBlock Text="TelNr.-Typ"></TextBlock>
-                            <TextBox x:Name="PhoneTypeInput"
-                                     Height="20">
-                            </TextBox>
+
+                            <ComboBox ItemsSource="{Binding Source={StaticResource PhoneTypeEnumValues}}"
+                                      DisplayMemberPath="."
+                                      x:Name="PhoneTypeComboBox">
+
+                            </ComboBox>
                         </StackPanel>
                     </StackPanel>
                 </Border>
                 <Border Grid.Row="4">
-                    <StackPanel 
-                        VerticalAlignment="Center">
+                    <StackPanel VerticalAlignment="Center">
                         <Button Click="SaveButton_Click">
                             Speichern
                         </Button>
@@ -212,25 +227,26 @@
                   HorizontalAlignment="Stretch">
             <DataGrid.Resources>
                 <Style TargetType="DataGridCell">
-                    <Setter Property="Padding" Value="4"/>
+                    <Setter Property="Padding"
+                            Value="4" />
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mitarbeiter-ID"
-                                    Binding="{Binding Id}" 
-                                    Width="Auto"/>
+                                    Binding="{Binding Id}"
+                                    Width="Auto" />
                 <DataGridTextColumn Header="Vorname"
-                                    Binding="{Binding FirstName}" 
-                                    Width="Auto"/>
+                                    Binding="{Binding FirstName}"
+                                    Width="Auto" />
                 <DataGridTextColumn Header="Nachname"
-                                    Binding="{Binding LastName}" 
-                                    Width="Auto"/>
+                                    Binding="{Binding LastName}"
+                                    Width="Auto" />
                 <DataGridTextColumn Header="Geburtstag"
-                                    Binding="{Binding Birthday}" 
-                                    Width="Auto"/>
+                                    Binding="{Binding Birthday}"
+                                    Width="Auto" />
                 <DataGridTextColumn Header="Position"
-                                    Binding="{Binding Position}" 
-                                    Width="Auto"/>
+                                    Binding="{Binding Position}"
+                                    Width="Auto" />
 
                 <DataGridTemplateColumn Header="Addressen"
                                         Width="Auto">
@@ -355,10 +371,12 @@
                                                 <ColumnDefinition Width="5" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Row="1" 
-                                                       Text="Typ:" 
-                                                       FontWeight="Bold"/>
-                                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding PhoneType}" />
+                                            <TextBlock Grid.Row="1"
+                                                       Text="Typ:"
+                                                       FontWeight="Bold" />
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="2"
+                                                       Text="{Binding PhoneType}" />
                                             <TextBlock Grid.Row="0"
                                                        Grid.Column="0"
                                                        Text="{Binding PhonePrefix}" />
@@ -390,9 +408,10 @@
                                             <!-- Editable TextBoxes for editing mode -->
                                             <TextBlock Grid.Row="1"
                                                        Grid.Column="0"
-                                                       Text="Typ:" 
-                                                       FontWeight="Bold"/>
-                                            <TextBox Grid.Row="1" Grid.Column="2" 
+                                                       Text="Typ:"
+                                                       FontWeight="Bold" />
+                                            <TextBox Grid.Row="1"
+                                                     Grid.Column="2"
                                                      Text="{Binding PhoneType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <TextBox Grid.Column="0"
                                                      Grid.Row="0"

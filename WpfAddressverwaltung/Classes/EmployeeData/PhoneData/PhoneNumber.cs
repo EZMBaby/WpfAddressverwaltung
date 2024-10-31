@@ -1,8 +1,9 @@
 ﻿// Import the System.ComponentModel namespace to use the INotifyPropertyChanged interface
+
 using System.ComponentModel;
 
 // Define the namespace for the PhoneNumber class
-namespace WpfAddressverwaltung.Classes.EmployeeData;
+namespace WpfAddressverwaltung.Classes.EmployeeData.PhoneData;
 
 /// <summary>
 /// Represents a phone number with properties for phone type, prefix, and suffix.
@@ -15,7 +16,7 @@ public class PhoneNumber : INotifyPropertyChanged
     /// <param name="phoneType">The type of phone number (e.g., home, work, mobile).</param>
     /// <param name="phonePrefix">The prefix of the phone number.</param>
     /// <param name="phoneSuffix">The suffix of the phone number.</param>
-    public PhoneNumber(string phoneType, string phonePrefix, string phoneSuffix)
+    public PhoneNumber(PhoneTypeEnum phoneType, string phonePrefix, string phoneSuffix)
     {
         // Initialize the private fields with the provided values
         this._phoneType = phoneType;
@@ -24,7 +25,7 @@ public class PhoneNumber : INotifyPropertyChanged
     }
 
     // Private fields to store the phone number properties
-    private string _phoneType;
+    private PhoneTypeEnum _phoneType;
     private string _phonePrefix;
     private string _phoneSuffix;
 
@@ -34,7 +35,7 @@ public class PhoneNumber : INotifyPropertyChanged
     /// <summary>
     /// Gets or sets the phone type.
     /// </summary>
-    public string PhoneType
+    public PhoneTypeEnum PhoneType
     {
         get => this._phoneType;
         set

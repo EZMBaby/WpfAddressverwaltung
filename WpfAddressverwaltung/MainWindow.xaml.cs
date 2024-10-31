@@ -1,17 +1,20 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using WpfAddressverwaltung.Classes.DataSaving;
 using WpfAddressverwaltung.Classes.EmployeeData;
+using WpfAddressverwaltung.Classes.EmployeeData.PhoneData;
 
 namespace WpfAddressverwaltung;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window {
-	private ObservableCollection<Employee> _employees;
+public partial class MainWindow {
+	private ObservableCollection<Employee> _employees = null!;
+	public IEnumerable<PhoneTypeEnum> EnumerablePhoneTypes => Enum.GetValues<PhoneTypeEnum>();
 
 	/// <summary>
 	/// Initializes a new instance of the MainWindow class.
@@ -25,7 +28,7 @@ public partial class MainWindow : Window {
 		this.InitializeComponent();
 
 		// Handle the Loaded event to load employees from the repository
-		this.Loaded += async (sender, args) => {
+		this.Loaded += async (_, _) => {
 			// Load employees from the repository asynchronously
 			this._employees = await EmployeeRepository.LoadEmployeesAsync();
 
@@ -37,9 +40,9 @@ public partial class MainWindow : Window {
 		};
 
 		// Handle the Closing event to save employees asynchronously
-		this.Closing += async (sender, args) => {
+		this.Closing += async (_, _) => {
 			// Save employees asynchronously when the window is closing
-			await EmployeeRepository.SaveEmployeesAsync(this._employees!);
+			await EmployeeRepository.SaveEmployeesAsync(this._employees);
 		};
 	}
 
@@ -79,9 +82,9 @@ public partial class MainWindow : Window {
 		string addressType  = this.AddressTypeInput.Text;  // Get address type from input field
 
 		// Extract phone number details from input fields
-		string prefix    = this.PrefixInput.Text;    // Get prefix from input field
-		string phone     = this.PhoneInput.Text;     // Get phone number from input field
-		string phoneType = this.PhoneTypeInput.Text; // Get phone type from input field
+		string        prefix    = this.PrefixInput.Text; // Get prefix from input field
+		string        phone     = this.PhoneInput.Text;  // Get phone number from input field
+		PhoneTypeEnum phoneType = (PhoneTypeEnum)this.PhoneTypeComboBox.SelectedValue;
 
 		// Validate address input fields
 		if (this.ValidateInput([street, streetNumber, city, postalCode, addressType])) {
@@ -90,7 +93,7 @@ public partial class MainWindow : Window {
 		}
 
 		// Validate phone number input fields
-		if (this.ValidateInput([prefix, phone, phoneType])) {
+		if (this.ValidateInput([prefix, phone])) {
 			// Create a new PhoneNumber instance and add it to the phoneNumbers collection
 			phoneNumbers.Add(new PhoneNumber(phoneType, prefix, phone));
 		}
@@ -132,9 +135,9 @@ public partial class MainWindow : Window {
 		this.AddressTypeInput.Text  = ""; // Clear address type input field
 
 		// Clear phone number input fields
-		this.PrefixInput.Text    = ""; // Clear prefix input field
-		this.PhoneInput.Text     = ""; // Clear phone number input field
-		this.PhoneTypeInput.Text = ""; // Clear phone type input field
+		this.PrefixInput.Text                = ""; // Clear prefix input field
+		this.PhoneInput.Text                 = ""; // Clear phone number input field
+		this.PhoneTypeComboBox.SelectedValue = 0;  // Clear phone type input field
 	}
 
 	/// <summary>
@@ -171,14 +174,12 @@ public partial class MainWindow : Window {
 	/// <param name="e">The event arguments.</param>
 	private void EmployeeInfoGrid_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
 		// Check if an item is selected in the grid
-		if (this.EmployeeInfoGrid.SelectedItem != null) {
-			// If an item is selected, make the EditButton visible
-			this.EditButton.Visibility = Visibility.Visible;
-		}
-		else {
+		// If an item is selected, make the EditButton visible
+		this.EditButton.Visibility = this.EmployeeInfoGrid.SelectedItem != null
+			? Visibility.Visible
+			:
 			// If no item is selected, collapse the EditButton
-			this.EditButton.Visibility = Visibility.Collapsed;
-		}
+			Visibility.Collapsed;
 	}
 
 	/// <summary>
@@ -188,39 +189,13 @@ public partial class MainWindow : Window {
 	/// <param name="sender">The sender of the event.</param>
 	/// <param name="e">The event arguments.</param>
 	private async void Employees_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
-		// Save the updated Employees collection to the repository
-		await EmployeeRepository.SaveEmployeesAsync(this._employees);
-	}
-
-	/// <summary>
-	/// Adds a new employee to the collection.
-	/// </summary>
-	/// <param name="employee">The employee to add.</param>
-	/// <returns>A completed task.</returns>
-	private Task AddEmployee(Employee employee) {
-		// Add the new employee to the collection, triggering the CollectionChanged event.
-		this._employees.Add(employee);
-		return Task.CompletedTask;
-	}
-
-	/// <summary>
-	/// Removes an employee from the collection.
-	/// </summary>
-	/// <param name="employee">The employee to remove.</param>
-	/// <returns>A completed task.</returns>
-	private Task DeleteEmployee(Employee employee) {
-		// Remove the employee from the collection, triggering the CollectionChanged event.
-		this._employees.Remove(employee);
-		return Task.CompletedTask;
-	}
-
-	/// <summary>
-	/// Updates an employee in the collection by saving the entire collection to the repository.
-	/// </summary>
-	/// <param name="employee">The employee to update (not actually used in this implementation).</param>
-	/// <returns>A task representing the asynchronous save operation.</returns>
-	private async Task UpdateEmployee(Employee employee) {
-		// Save the updated employees collection to the repository asynchronously.
-		await EmployeeRepository.SaveEmployeesAsync(this._employees);
+		try {
+			// Save the updated Employees collection to the repository
+			await EmployeeRepository.SaveEmployeesAsync(this._employees);
+		}
+		catch (Exception exception) {
+			// Log the exception
+			Debug.WriteLine(exception);
+		}
 	}
 }

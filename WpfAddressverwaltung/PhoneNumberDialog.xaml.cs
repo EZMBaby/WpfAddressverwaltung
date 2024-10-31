@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using WpfAddressverwaltung.Classes.EmployeeData;
+using WpfAddressverwaltung.Classes.EmployeeData.PhoneData;
 
 namespace WpfAddressverwaltung;
 
@@ -29,13 +29,12 @@ public partial class PhoneNumberDialog {
 	/// <param name="e">The RoutedEventArgs instance.</param>
 	private void AddButton_Click(object sender, RoutedEventArgs e) {
 		// Get the input values from the dialog's fields
-		string phoneNumberType = this.PhoneTypeInput.Text;
-		string phoneNumberPrefix = this.PhonePrefixInput.Text;
-		string phoneNumberSuffix = this.PhoneSuffixInput.Text;
+		PhoneTypeEnum phoneNumberType   = (PhoneTypeEnum)this.PhoneTypeComboBox.SelectedValue;
+		string        phoneNumberPrefix = this.PhonePrefixInput.Text;
+		string        phoneNumberSuffix = this.PhoneSuffixInput.Text;
 
 		// Check if any of the input fields are empty
-		if (string.IsNullOrEmpty(phoneNumberType) || 
-			string.IsNullOrEmpty(phoneNumberPrefix) ||
+		if (string.IsNullOrEmpty(phoneNumberPrefix) ||
 			string.IsNullOrEmpty(phoneNumberSuffix)) 
 		{
 			// If any field is empty, do not create a new phone number

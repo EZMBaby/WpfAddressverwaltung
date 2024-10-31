@@ -15,7 +15,10 @@
         <StackPanel Margin="0,10,0,0"
                     Width="200">
             <TextBlock Text="Typ:" />
-            <TextBox x:Name="PhoneTypeInput" />
+            <ComboBox ItemsSource="{Binding PhoneTypeEnum}"
+                      SelectedItem="{Binding PhoneType.Type, Mode=TwoWay}"
+                      DisplayMemberPath="PhoneType"
+                      x:Name="PhoneTypeComboBox"/>
         </StackPanel>
 
         <Grid>
