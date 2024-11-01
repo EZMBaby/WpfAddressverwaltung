@@ -55,6 +55,7 @@ Die Liste ist mit einer Suchfunktion versehen, die die Adressen und Telefonnumme
 - **#:\<id>** Sucht nach Mitarbeitern mit der angegebenen ID
 - **addr:\<string>** Sucht nach Mitarbeitern mit dem angegebenen String in der Adresse
 - **pos:\<string>** Sucht nach Mitarbeitern mit dem angegebenen String in der Position
+- **phone:\<string>** Sucht nach Mitarbeitern mit dem angegebenen String in der Telefonnummer
 
 Ist der Suchparameter leer, werden alle Mitarbeiter angezeigt.
 

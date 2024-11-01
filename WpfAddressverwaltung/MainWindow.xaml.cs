@@ -15,7 +15,6 @@ namespace WpfAddressverwaltung;
 /// </summary>
 public partial class MainWindow {
 	private ObservableCollection<Employee> _employees = null!;
-	public  IEnumerable<PhoneTypeEnum>     EnumerablePhoneTypes => Enum.GetValues<PhoneTypeEnum>();
 
 	/// <summary>
 	/// Initializes a new instance of the MainWindow class.
@@ -64,7 +63,7 @@ public partial class MainWindow {
 		// Generate a random id
 		int id = 1;
 		if (this._employees.Count > 0) {
-			id = this._employees.Max(e => e.Id) + 1;
+			id = this._employees.Max(employee => employee.Id) + 1;
 		}
 
 		// Extract personal details from input fields
@@ -114,7 +113,9 @@ public partial class MainWindow {
 		}
 
 		// Create a new Employee instance with the extracted data and add it to the _employees collection
-		this._employees.Add(new Employee(firstName, lastName, position, birthday, addresses, phoneNumbers, id));
+		this._employees.Add(
+			new Employee(firstName, lastName, position, birthday, addresses, phoneNumbers, id)
+		);
 
 		// Clear all input fields
 		this.ClearInputFields();
@@ -240,8 +241,8 @@ public partial class MainWindow {
 	}
 
 	private void DeleteButton_OnClick(object sender, RoutedEventArgs e) {
-		var selectedRows = this.EmployeeInfoGrid.SelectedItems.Cast<Employee>().ToList();
-		foreach (var employee in selectedRows) {
+		List<Employee> selectedRows = this.EmployeeInfoGrid.SelectedItems.Cast<Employee>().ToList();
+		foreach (Employee? employee in selectedRows) {
 			this._employees.Remove(employee);
 		}
 	}
@@ -249,66 +250,66 @@ public partial class MainWindow {
 	private void SearchEmployees(string query) {
 		// Wenn das Suchfeld leer ist, zeige alle Mitarbeiter an
 		if (string.IsNullOrWhiteSpace(query)) {
-			EmployeeInfoGrid.ItemsSource = _employees.ToList();
+			this.EmployeeInfoGrid.ItemsSource = this._employees.ToList();
 			return;
 		}
 
-		IEnumerable<Employee> filteredEmployees = _employees;
+		IEnumerable<Employee> filteredEmployees = this._employees;
 
 		// Überprüfen, ob die Suchanfrage den ID-Filter enthält
 		if (query.StartsWith("#:")) {
-			if (int.TryParse(query.Substring(2), out int id)) {
-				filteredEmployees = _employees.Where(e => e.Id == id);
+			if (int.TryParse(query.AsSpan(2), out int id)) {
+				filteredEmployees = this._employees.Where(employee => employee.Id == id);
 			}
 		}
 
 		// Überprüfen, ob die Suchanfrage den Addressen-Filter enthält
 		else if (query.StartsWith("addr:")) {
-			string addressQuery = query.Substring(5).ToLower();
-			filteredEmployees = _employees.Where(e =>
-				e.Address.Any(a => a.Street.ToLower().Contains(addressQuery) ||
-								   a.City.ToLower().Contains(addressQuery) ||
-								   a.PostalCode.ToLower().Contains(addressQuery)));
+			string addressQuery = query[5..].ToLower();
+			filteredEmployees = this._employees.Where(e =>
+				e.Address.Any(address =>
+					address.Street.Contains(addressQuery, StringComparison.CurrentCultureIgnoreCase) ||
+					address.City.Contains(addressQuery, StringComparison.CurrentCultureIgnoreCase) ||
+					address.PostalCode.Contains(addressQuery, StringComparison.CurrentCultureIgnoreCase) ||
+					address.StreetNumber.Contains(addressQuery, StringComparison.CurrentCultureIgnoreCase)));
 		}
 
 		// Überprüfen, ob die Suchanfrage den Positions-Filter enthält
 		else if (query.StartsWith("pos:")) {
-			string positionQuery = query.Substring(4).ToLower();
-			filteredEmployees = _employees.Where(e => e.Position.ToLower().Contains(positionQuery));
+			string positionQuery = query[4..].ToLower();
+			filteredEmployees = this._employees.Where(employee =>
+				employee.Position.Contains(positionQuery, StringComparison.CurrentCultureIgnoreCase));
 		}
 
 		// Überprüfen, ob die Suchanfrage den Telefonnummern-Filter enthält
 		else if (query.StartsWith("phone:")) {
-			string phoneQuery = query.Substring(6).ToLower();
-			filteredEmployees = _employees.Where(e => 
-				e.Phone.Any(p => p.PhonePrefix.ToLower().Contains(phoneQuery) ||
-								 p.PhoneSuffix.ToLower().Contains(phoneQuery)));
+			string phoneQuery = query[6..].ToLower();
+			filteredEmployees = this._employees.Where(employee =>
+				employee.Phone.Any(phone =>
+					phone.PhonePrefix.Contains(phoneQuery, StringComparison.CurrentCultureIgnoreCase) ||
+					phone.PhoneSuffix.Contains(phoneQuery, StringComparison.CurrentCultureIgnoreCase) ||
+					(phone.PhonePrefix.ToLower() + phone.PhoneSuffix.ToLower()).Contains(phoneQuery)));
 		}
-		
+
 		// Standard-String-Suche für Vorname und Nachname
 		else {
 			string nameQuery = query.ToLower();
-			filteredEmployees = _employees.Where(e =>
-				e.FirstName.ToLower().Contains(nameQuery) ||
-				e.LastName.ToLower().Contains(nameQuery));
+			filteredEmployees = this._employees.Where(employee =>
+				employee.FirstName.Contains(nameQuery, StringComparison.CurrentCultureIgnoreCase) ||
+				employee.LastName.Contains(nameQuery, StringComparison.CurrentCultureIgnoreCase));
 		}
 
 		// Aktualisiere die ItemsSource des DataGrids
-		EmployeeInfoGrid.ItemsSource = filteredEmployees.ToList();
+		this.EmployeeInfoGrid.ItemsSource = filteredEmployees.ToList();
 	}
 
 	private void SearchButton_Click(object sender, RoutedEventArgs e) {
-		SearchEmployees(this.SearchInput.Text);
-		this.SearchInput.Text = "";
+		this.SearchEmployees(this.SearchInput.Text);
+		this.SearchInput.Text     = "";
 		this.SearchButton.Content = "Reset";
 	}
 
 	private void SearchInput_OnTextChanged(object sender, TextChangedEventArgs e) {
-		if (this.SearchInput.Text.Length > 0) {
-			this.SearchButton.Content = "Suchen";
-		}
-		else {
-			this.SearchButton.Content = "Reset";
-		}
+		this.SearchButton.Content = this.SearchInput.Text.Length > 0 ? "Suchen" : "Reset";
 	}
 }

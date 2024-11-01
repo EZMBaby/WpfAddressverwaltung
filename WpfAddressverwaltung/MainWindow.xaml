@@ -48,7 +48,9 @@
                 <StackPanel>
                     <StackPanel.Resources>
                         <Style TargetType="TextBox">
-                            <Setter Property="Margin" Value="0, 5"></Setter>
+                            <Setter Property="Margin"
+                                    Value="0, 5">
+                            </Setter>
                         </Style>
                     </StackPanel.Resources>
                     <TextBlock VerticalAlignment="Center"
@@ -57,7 +59,7 @@
                         Neuen Eintrag hinzufügen
                     </TextBlock>
                     <TextBox x:Name="SearchInput"
-                             TextChanged="SearchInput_OnTextChanged"/>
+                             TextChanged="SearchInput_OnTextChanged" />
                     <Button x:Name="SearchButton"
                             Click="SearchButton_Click">
                         Reset
@@ -91,7 +93,7 @@
                         </Grid>
 
 
-                        <StackPanel Grid.Row="2">
+                        <StackPanel>
                             <TextBlock Text="Position"></TextBlock>
                             <TextBox x:Name="PositionInput"
                                      Height="20">

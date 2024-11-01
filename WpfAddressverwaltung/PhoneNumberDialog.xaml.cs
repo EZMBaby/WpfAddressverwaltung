@@ -7,7 +7,6 @@ namespace WpfAddressverwaltung;
 /// Represents a dialog for entering a new phone number.
 /// </summary>
 public partial class PhoneNumberDialog {
-	
 	/// <summary>
 	/// Gets or sets the newly entered phone number.
 	/// </summary>
@@ -35,18 +34,17 @@ public partial class PhoneNumberDialog {
 
 		// Check if any of the input fields are empty
 		if (string.IsNullOrEmpty(phoneNumberPrefix) ||
-			string.IsNullOrEmpty(phoneNumberSuffix)) 
-		{
+			string.IsNullOrEmpty(phoneNumberSuffix)) {
 			// If any field is empty, do not create a new phone number
 			return;
 		}
-		
+
 		// Create a new PhoneNumber instance from the input values
 		this.NewPhoneNumber = new PhoneNumber(phoneNumberType, phoneNumberPrefix, phoneNumberSuffix);
-		
+
 		// Set the dialog result to true and close the dialog
 		this.DialogResult = true; // Setze Dialogergebnis auf true
-		this.Close();               // Schließe das Fenster
+		this.Close();             // Schließe das Fenster
 	}
 
 	/// <summary>
