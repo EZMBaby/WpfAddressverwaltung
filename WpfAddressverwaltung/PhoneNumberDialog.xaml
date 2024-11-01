@@ -3,10 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:WpfAddressverwaltung.Classes.EmployeeData.PhoneData"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         Height="250"
         Width="300"
         ResizeMode="NoResize">
+    
+    <Window.Resources>
+        <ObjectDataProvider MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}"
+                            x:Key="PhoneTypeEnumValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:PhoneTypeEnum" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    
     <StackPanel Margin="20">
         <TextBlock Text="Neue Telefonnummer hinzufügen:"
                    FontWeight="Bold"
@@ -15,10 +28,10 @@
         <StackPanel Margin="0,10,0,0"
                     Width="200">
             <TextBlock Text="Typ:" />
-            <ComboBox ItemsSource="{Binding PhoneTypeEnum}"
-                      SelectedItem="{Binding PhoneType.Type, Mode=TwoWay}"
-                      DisplayMemberPath="PhoneType"
-                      x:Name="PhoneTypeComboBox"/>
+            <ComboBox ItemsSource="{Binding Source={StaticResource PhoneTypeEnumValues}}"
+                      DisplayMemberPath="."
+                      IsSynchronizedWithCurrentItem="True"
+                      x:Name="PhoneTypeComboBox" />
         </StackPanel>
 
         <Grid>

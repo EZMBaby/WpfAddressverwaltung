@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace WpfAddressverwaltung.Classes.EmployeeData;
+namespace WpfAddressverwaltung.Classes.EmployeeData.AddressData;
 
 /// <summary>
 /// Represents an address with street, street number, city, postal code, and address type.
@@ -15,7 +15,7 @@ public class Address : INotifyPropertyChanged
     /// <param name="city">The city name.</param>
     /// <param name="postalCode">The postal code.</param>
     /// <param name="addressType">The type of address (e.g., home, work, etc.).</param>
-    public Address(string street, string streetNumber, string city, string postalCode, string addressType)
+    public Address(string street, string streetNumber, string city, string postalCode, AddressTypeEnum addressType)
     {
         // Initialize the private fields with the provided values
         this._street = street;
@@ -30,7 +30,7 @@ public class Address : INotifyPropertyChanged
     private string _streetNumber;
     private string _city;
     private string _postalCode;
-    private string _addressType;
+    private AddressTypeEnum _addressType;
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -96,7 +96,7 @@ public class Address : INotifyPropertyChanged
     /// <summary>
     /// Gets or sets the type of address.
     /// </summary>
-    public string AddressType
+    public AddressTypeEnum AddressType
     {
         get => this._addressType;
         set

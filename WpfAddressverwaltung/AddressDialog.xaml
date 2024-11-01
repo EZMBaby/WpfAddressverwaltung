@@ -3,18 +3,33 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:addressData="clr-namespace:WpfAddressverwaltung.Classes.EmployeeData.AddressData"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         Title="AddressDialog"
         Height="300"
         Width="400"
         ResizeMode="NoResize">
+    
+    <Window.Resources>
+        <ObjectDataProvider MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}"
+                            x:Key="AddressTypeEnumValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="addressData:AddressTypeEnum" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    
     <StackPanel Margin="20">
         <TextBlock Text="Neue Addresse hinzufügen:" FontWeight="Bold" Margin="0,0,0,10" />
         
         <StackPanel Margin="0,10,0,0"
                     Width="300">
             <TextBlock Text="Typ:" />
-            <TextBox x:Name="AddressTypeInput"/>
+            <ComboBox ItemsSource="{Binding Source={StaticResource AddressTypeEnumValues}}"
+                      DisplayMemberPath="."
+                      x:Name="AddressTypeComboBox"/>
         </StackPanel>
         
         <Grid>

@@ -38,13 +38,13 @@ public class AesEncrypting
         ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
         // Create a memory stream to store the encrypted data.
-        using MemoryStream msEncrypt = new MemoryStream();
+        using MemoryStream msEncrypt = new();
         
         // Create a crypto stream to perform the encryption.
-        using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+        using (CryptoStream csEncrypt = new(msEncrypt, encryptor, CryptoStreamMode.Write))
         {
             // Create a stream writer to write the plain text to the crypto stream.
-            using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+            using (StreamWriter swEncrypt = new(csEncrypt))
             {
                 // Write the plain text to the crypto stream.
                 swEncrypt.Write(plainText);
@@ -75,13 +75,13 @@ public class AesEncrypting
         ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
         // Create a memory stream to store the decrypted data.
-        using MemoryStream msDecrypt = new MemoryStream(cipherText);
+        using MemoryStream msDecrypt = new(cipherText);
 
         // Create a crypto stream to perform the decryption.
-        using CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
+        using CryptoStream csDecrypt = new(msDecrypt, decryptor, CryptoStreamMode.Read);
 
         // Create a stream reader to read the decrypted data.
-        using StreamReader srDecrypt = new StreamReader(csDecrypt);
+        using StreamReader srDecrypt = new(csDecrypt);
 
         // Return the decrypted string.
         return srDecrypt.ReadToEnd();

@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using WpfAddressverwaltung.Classes.EmployeeData;
+using WpfAddressverwaltung.Classes.EmployeeData.AddressData;
 
 namespace WpfAddressverwaltung;
 
@@ -30,15 +30,14 @@ public partial class AddressDialog : Window
     private void AddButton_Click(object sender, RoutedEventArgs e)
     {
         // Get the input values from the dialog's fields
-        string addressType = this.AddressTypeInput.Text;
+        AddressTypeEnum addressType = (AddressTypeEnum)this.AddressTypeComboBox.SelectedValue;
         string street = this.AddressStreetInput.Text;
         string streetNumber = this.AddressStreetNumberInput.Text;
         string postalCode = this.AddressPostalInput.Text;
         string city = this.AddressCityInput.Text;
 
         // Check if any of the input fields are empty
-        if (string.IsNullOrEmpty(addressType) ||
-            string.IsNullOrEmpty(street) ||
+        if (string.IsNullOrEmpty(street) ||
             string.IsNullOrEmpty(streetNumber) ||
             string.IsNullOrEmpty(postalCode) ||
             string.IsNullOrEmpty(city))

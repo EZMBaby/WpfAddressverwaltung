@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using WpfAddressverwaltung.Classes.EmployeeData;
+using WpfAddressverwaltung.Classes.EmployeeData.AddressData;
 using WpfAddressverwaltung.Classes.EmployeeData.PhoneData;
 
 namespace WpfAddressverwaltung;
@@ -33,7 +34,7 @@ public partial class EmployeeEditor
     private void AddAddress_Click(object sender, RoutedEventArgs e)
     {
         // Create a new AddressDialog instance.
-        AddressDialog addressDialog = new AddressDialog();
+        AddressDialog addressDialog = new();
 
         // Show the dialog and check if it was successfully closed.
         if (addressDialog.ShowDialog() == true)
@@ -57,7 +58,7 @@ public partial class EmployeeEditor
     private void AddPhone_Click(object sender, RoutedEventArgs e)
     {
         // Create a new PhoneNumberDialog instance.
-        PhoneNumberDialog phoneDialog = new PhoneNumberDialog();
+        PhoneNumberDialog phoneDialog = new();
 
         // Show the dialog and check if it was successfully closed.
         if (phoneDialog.ShowDialog() == true)
@@ -85,6 +86,7 @@ public partial class EmployeeEditor
 
         // Show the EmployeeInfoGrid in the parent MainWindow.
         this._parentWindow.EmployeeInfoGrid.Visibility = Visibility.Visible;
+        this._parentWindow.NewEntryGrid.Visibility     = Visibility.Visible;
 
         // Clear the selected item in the EmployeeInfoGrid.
         this._parentWindow.EmployeeInfoGrid.SelectedItem = null;

@@ -6,69 +6,95 @@
              mc:Ignorable="d"
              d:DesignHeight="Auto"
              d:DesignWidth="300">
-        <StackPanel Margin="20">
-        <TextBlock Text="Bearbeiten Sie die Mitarbeiterinformationen:" FontWeight="Bold" />
-        
+
+    <StackPanel Margin="20">
+        <TextBlock Text="Bearbeiten Sie die Mitarbeiterinformationen:"
+                   FontWeight="Bold" />
+
         <StackPanel Margin="0,10,0,0">
             <TextBlock Text="ID:" />
-            <TextBox Text="{Binding Id}" IsReadOnly="True" />
+            <TextBox Text="{Binding Id}"
+                     IsReadOnly="True" />
         </StackPanel>
 
         <StackPanel Margin="0,10,0,0">
             <TextBlock Text="Vorname:" />
             <TextBox Text="{Binding FirstName}" />
         </StackPanel>
-        
+
         <StackPanel Margin="0,10,0,0">
             <TextBlock Text="Nachname:" />
             <TextBox Text="{Binding LastName}" />
         </StackPanel>
-        
+
         <StackPanel Margin="0,10,0,0">
             <TextBlock Text="Position:" />
             <TextBox Text="{Binding Position}" />
         </StackPanel>
-        
+
         <StackPanel Margin="0,10,0,0">
             <TextBlock Text="Geburtstag:" />
             <TextBox Text="{Binding Birthday}" />
         </StackPanel>
 
-        <TextBlock Text="Adressen:" FontWeight="Bold" Margin="0,10,0,0"/>
+        <TextBlock Text="Adressen:"
+                   FontWeight="Bold"
+                   Margin="0,10,0,0" />
         <ItemsControl ItemsSource="{Binding Address}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
-                        <TextBox Width="120" Text="{Binding Street}"/>
-                        <TextBox Width="60" Text="{Binding StreetNumber}"/>
-                        <TextBox Width="120" Text="{Binding PostalCode}"/>
-                        <TextBox Width="120" Text="{Binding City}"/>
-                        <TextBox Width="100" Text="{Binding AddressType}"/>
-                        <Button Content="Löschen" Click="DeleteAddress_Click" Tag="{Binding}" />
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0,5">
+                        <TextBox Width="120"
+                                 Text="{Binding Street}" />
+                        <TextBox Width="60"
+                                 Text="{Binding StreetNumber}" />
+                        <TextBox Width="120"
+                                 Text="{Binding PostalCode}" />
+                        <TextBox Width="120"
+                                 Text="{Binding City}" />
+                        <TextBox Width="100"
+                                 Text="{Binding AddressType}" />
+                        <Button Content="Löschen"
+                                Click="DeleteAddress_Click"
+                                Tag="{Binding}" />
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        
-        <Button Content="Neue Adresse hinzufügen" Click="AddAddress_Click" Margin="0,10,0,0"/>
 
-        <TextBlock Text="Telefonnummern:" FontWeight="Bold" Margin="0,10,0,0"/>
+        <Button Content="Neue Adresse hinzufügen"
+                Click="AddAddress_Click"
+                Margin="0,10,0,0" />
+
+        <TextBlock Text="Telefonnummern:"
+                   FontWeight="Bold"
+                   Margin="0,10,0,0" />
         <ItemsControl ItemsSource="{Binding Phone}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
-                        <TextBox Width="120" Text="{Binding PhoneType}"/>
-                        <TextBox Width="120" Text="{Binding PhonePrefix}"/>
-                        <TextBox Width="120" Text="{Binding PhoneSuffix}"/>
-                        <Button Content="Löschen" Click="DeletePhone_Click" Tag="{Binding}" />
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0,5">
+                        <TextBox Width="120"
+                                 Text="{Binding PhonePrefix}" />
+                        <TextBox Width="120"
+                                 Text="{Binding PhoneSuffix}" />
+                        <TextBox Width="120"
+                                 Text="{Binding PhoneType}" />
+                        <Button Content="Löschen"
+                                Click="DeletePhone_Click"
+                                Tag="{Binding}" />
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        
-        <Button Content="Neue Telefonnummer hinzufügen" Click="AddPhone_Click" Margin="0,10,0,0"/>
 
-        <Button Content="Speichern" Click="SaveButton_Click" Margin="0,20,0,0"/>
+        <Button Content="Neue Telefonnummer hinzufügen"
+                Click="AddPhone_Click"
+                Margin="0,10,0,0" />
+
+        <Button Content="Speichern"
+                Click="SaveButton_Click"
+                Margin="0,20,0,0" />
     </StackPanel>
 </UserControl>
-

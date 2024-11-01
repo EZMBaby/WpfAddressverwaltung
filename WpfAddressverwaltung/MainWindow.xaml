@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfAddressverwaltung.Classes.EmployeeData.PhoneData"
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+        xmlns:addressData="clr-namespace:WpfAddressverwaltung.Classes.EmployeeData.AddressData"
         mc:Ignorable="d"
         Title="Addressverwaltungstool"
         Height="650"
@@ -19,6 +20,13 @@
                 <x:Type TypeName="local:PhoneTypeEnum" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+        <ObjectDataProvider MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}"
+                            x:Key="AddressTypeEnumValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="addressData:AddressTypeEnum" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </Window.Resources>
 
     <Grid x:Name="MainGrid">
@@ -26,20 +34,37 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
-        <Border Margin="20">
+        <Border Margin="20"
+                x:Name="NewEntryGrid">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <TextBlock VerticalAlignment="Center"
-                           HorizontalAlignment="Center"
-                           FontWeight="Bold">
-                    Neuen Eintrag hinzufügen
-                </TextBlock>
+
+                <StackPanel>
+                    <StackPanel.Resources>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Margin" Value="0, 5"></Setter>
+                        </Style>
+                    </StackPanel.Resources>
+                    <TextBlock VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               FontWeight="Bold">
+                        Neuen Eintrag hinzufügen
+                    </TextBlock>
+                    <TextBox x:Name="SearchInput"
+                             TextChanged="SearchInput_OnTextChanged"/>
+                    <Button x:Name="SearchButton"
+                            Click="SearchButton_Click">
+                        Reset
+                    </Button>
+                </StackPanel>
+
+
                 <Border Grid.Row="1">
                     <StackPanel Margin="5">
 
@@ -86,7 +111,8 @@
                                 <TextBlock Text="Tag"></TextBlock>
                                 <TextBox x:Name="DayInput"
                                          Height="20"
-                                         MaxLength="2">
+                                         MaxLength="2"
+                                         TextChanged="DayInput_OnTextChanged">
                                 </TextBox>
                             </StackPanel>
 
@@ -94,7 +120,8 @@
                                 <TextBlock Text="Monat"></TextBlock>
                                 <TextBox x:Name="MonthInput"
                                          Height="20"
-                                         MaxLength="2">
+                                         MaxLength="2"
+                                         TextChanged="MonthInput_OnTextChanged">
                                 </TextBox>
                             </StackPanel>
 
@@ -102,7 +129,8 @@
                                 <TextBlock Text="Jahr"></TextBlock>
                                 <TextBox x:Name="YearInput"
                                          Height="20"
-                                         MaxLength="4">
+                                         MaxLength="4"
+                                         TextChanged="YearInput_OnTextChanged">
                                 </TextBox>
                             </StackPanel>
 
@@ -159,9 +187,10 @@
 
                         <StackPanel>
                             <TextBlock Text="Address-Typ"></TextBlock>
-                            <TextBox x:Name="AddressTypeInput"
-                                     Height="20">
-                            </TextBox>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource AddressTypeEnumValues}}"
+                                      DisplayMemberPath="."
+                                      IsSynchronizedWithCurrentItem="True"
+                                      x:Name="AddressTypeComboBox" />
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -192,17 +221,21 @@
 
                         <StackPanel>
                             <TextBlock Text="TelNr.-Typ"></TextBlock>
-
                             <ComboBox ItemsSource="{Binding Source={StaticResource PhoneTypeEnumValues}}"
                                       DisplayMemberPath="."
-                                      x:Name="PhoneTypeComboBox">
-
-                            </ComboBox>
+                                      IsSynchronizedWithCurrentItem="True"
+                                      x:Name="PhoneTypeComboBox" />
                         </StackPanel>
                     </StackPanel>
                 </Border>
                 <Border Grid.Row="4">
                     <StackPanel VerticalAlignment="Center">
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Margin"
+                                        Value="5" />
+                            </Style>
+                        </StackPanel.Resources>
                         <Button Click="SaveButton_Click">
                             Speichern
                         </Button>
@@ -210,6 +243,11 @@
                                 Visibility="Collapsed"
                                 x:Name="EditButton">
                             Ändern
+                        </Button>
+                        <Button Click="DeleteButton_OnClick"
+                                Visibility="Collapsed"
+                                x:Name="DeleteButton">
+                            Löschen
                         </Button>
                     </StackPanel>
                 </Border>
@@ -224,7 +262,9 @@
                   AlternationCount="2"
                   AutoGenerateColumns="False"
                   ColumnWidth="*"
-                  HorizontalAlignment="Stretch">
+                  HorizontalAlignment="Stretch"
+                  IsReadOnly="True"
+                  SelectionMode="Extended">
             <DataGrid.Resources>
                 <Style TargetType="DataGridCell">
                     <Setter Property="Padding"
@@ -299,60 +339,7 @@
                             </ItemsControl>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-
-                    <!-- Editing Template für Bearbeitungsmodus -->
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <ItemsControl ItemsSource="{Binding Address}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="5" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <!-- Bearbeitbare AddressType in der ersten Zeile -->
-                                            <TextBlock Grid.Row="2"
-                                                       Grid.Column="0"
-                                                       Text="Typ:"
-                                                       FontWeight="Bold" />
-                                            <TextBox Grid.Row="2"
-                                                     Grid.Column="2"
-                                                     Text="{Binding AddressType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                                            <!-- Bearbeitbare Straße und Hausnummer in der zweiten Zeile -->
-                                            <TextBox Grid.Row="0"
-                                                     Grid.Column="0"
-                                                     Text="{Binding Street, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                            <TextBox Grid.Row="0"
-                                                     Grid.Column="2"
-                                                     Margin="5,0,0,0"
-                                                     Text="{Binding StreetNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                                            <!-- Bearbeitbare Postleitzahl und Ort in der dritten Zeile -->
-                                            <TextBox Grid.Row="1"
-                                                     Grid.Column="0"
-                                                     Text="{Binding PostalCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                            <TextBox Grid.Row="1"
-                                                     Grid.Column="2"
-                                                     Margin="5,0,0,0"
-                                                     Text="{Binding City, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-
                 </DataGridTemplateColumn>
-
 
                 <DataGridTemplateColumn Header="Telefon"
                                         Width="Auto">
@@ -389,42 +376,6 @@
                             </ItemsControl>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <ItemsControl ItemsSource="{Binding Phone}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="5" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <!-- Editable TextBoxes for editing mode -->
-                                            <TextBlock Grid.Row="1"
-                                                       Grid.Column="0"
-                                                       Text="Typ:"
-                                                       FontWeight="Bold" />
-                                            <TextBox Grid.Row="1"
-                                                     Grid.Column="2"
-                                                     Text="{Binding PhoneType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                            <TextBox Grid.Column="0"
-                                                     Grid.Row="0"
-                                                     Text="{Binding PhonePrefix, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                            <TextBox Grid.Row="0"
-                                                     Grid.Column="2"
-                                                     Text="{Binding PhoneSuffix, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>

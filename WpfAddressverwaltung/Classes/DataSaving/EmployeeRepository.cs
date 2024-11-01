@@ -61,7 +61,7 @@ namespace WpfAddressverwaltung.Classes.DataSaving
         public static async Task SaveEmployeesAsync(ObservableCollection<Employee> employees)
         {
             // Create a JsonSerializerOptions instance to serialize the data with indentation
-            JsonSerializerOptions options = new JsonSerializerOptions { WriteIndented = true };
+            JsonSerializerOptions options = new() { WriteIndented = true };
 
             // Serialize the employee data to a JSON string
             string json = JsonSerializer.Serialize(employees, options);

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using WpfAddressverwaltung.Classes.DataSaving;
 using WpfAddressverwaltung.Classes.EmployeeData;
+using WpfAddressverwaltung.Classes.EmployeeData.AddressData;
 using WpfAddressverwaltung.Classes.EmployeeData.PhoneData;
 
 namespace WpfAddressverwaltung;
@@ -14,7 +15,7 @@ namespace WpfAddressverwaltung;
 /// </summary>
 public partial class MainWindow {
 	private ObservableCollection<Employee> _employees = null!;
-	public IEnumerable<PhoneTypeEnum> EnumerablePhoneTypes => Enum.GetValues<PhoneTypeEnum>();
+	public  IEnumerable<PhoneTypeEnum>     EnumerablePhoneTypes => Enum.GetValues<PhoneTypeEnum>();
 
 	/// <summary>
 	/// Initializes a new instance of the MainWindow class.
@@ -56,30 +57,44 @@ public partial class MainWindow {
 	/// <param name="sender">The sender of the event.</param>
 	/// <param name="e">The event arguments.</param>
 	private void SaveButton_Click(object sender, RoutedEventArgs e) {
-		// Create a new instance of the Random class to generate a random id
-		Random random = new Random();
-
 		// Initialize empty collections for phone numbers and addresses
 		ObservableCollection<PhoneNumber> phoneNumbers = [];
 		ObservableCollection<Address>     addresses    = [];
 
-		// Generate a random id between 1 and 9999
-		int id = random.Next(1, 9999);
+		// Generate a random id
+		int id = 1;
+		if (this._employees.Count > 0) {
+			id = this._employees.Max(e => e.Id) + 1;
+		}
 
 		// Extract personal details from input fields
 		string firstName = this.FirstNameInput.Text; // Get first name from input field
 		string lastName  = this.LastNameInput.Text;  // Get last name from input field
 		string position  = this.PositionInput.Text;  // Get position from input field
+
+		string birthdayDay = this.DayInput.Text;
+		if (birthdayDay.Length == 1) {
+			birthdayDay = "0" + birthdayDay;
+		}
+
+		string birthdayMonth = this.MonthInput.Text;
+		if (birthdayMonth.Length == 1) {
+			birthdayMonth = "0" + birthdayMonth;
+		}
+
+		string birthdayYear = this.YearInput.Text;
+
 		string birthday =
-			$"{this.DayInput.Text}." + $"{this.MonthInput.Text}." +
-			$"{this.YearInput.Text}"; // Format birthday from input fields
+			$"{birthdayDay}." + $"{birthdayMonth}." +
+			$"{birthdayYear}"; // Format birthday from input fields
 
 		// Extract address details from input fields
 		string street       = this.StreetInput.Text;       // Get street from input field
 		string streetNumber = this.StreetNumberInput.Text; // Get street number from input field
 		string city         = this.CityInput.Text;         // Get city from input field
 		string postalCode   = this.PostalInput.Text;       // Get postal code from input field
-		string addressType  = this.AddressTypeInput.Text;  // Get address type from input field
+		AddressTypeEnum
+			addressType = (AddressTypeEnum)this.AddressTypeComboBox.SelectedValue; // Get address type from input field
 
 		// Extract phone number details from input fields
 		string        prefix    = this.PrefixInput.Text; // Get prefix from input field
@@ -87,7 +102,7 @@ public partial class MainWindow {
 		PhoneTypeEnum phoneType = (PhoneTypeEnum)this.PhoneTypeComboBox.SelectedValue;
 
 		// Validate address input fields
-		if (this.ValidateInput([street, streetNumber, city, postalCode, addressType])) {
+		if (this.ValidateInput([street, streetNumber, city, postalCode])) {
 			// Create a new Address instance and add it to the addresses collection
 			addresses.Add(new Address(street, streetNumber, city, postalCode, addressType));
 		}
@@ -128,16 +143,16 @@ public partial class MainWindow {
 		this.YearInput.Text      = ""; // Clear year input field
 
 		// Clear address input fields
-		this.StreetInput.Text       = ""; // Clear street input field
-		this.StreetNumberInput.Text = ""; // Clear street number input field
-		this.CityInput.Text         = ""; // Clear city input field
-		this.PostalInput.Text       = ""; // Clear postal code input field
-		this.AddressTypeInput.Text  = ""; // Clear address type input field
+		this.StreetInput.Text                  = ""; // Clear street input field
+		this.StreetNumberInput.Text            = ""; // Clear street number input field
+		this.CityInput.Text                    = ""; // Clear city input field
+		this.PostalInput.Text                  = ""; // Clear postal code input field
+		this.AddressTypeComboBox.SelectedIndex = 1;  // Clear address type input field
 
 		// Clear phone number input fields
 		this.PrefixInput.Text                = ""; // Clear prefix input field
 		this.PhoneInput.Text                 = ""; // Clear phone number input field
-		this.PhoneTypeComboBox.SelectedValue = 0;  // Clear phone type input field
+		this.PhoneTypeComboBox.SelectedIndex = 1;  // Clear phone type input field
 	}
 
 	/// <summary>
@@ -151,10 +166,11 @@ public partial class MainWindow {
 		Employee? selectedRow = (Employee)this.EmployeeInfoGrid.SelectedItem;
 
 		// Create a new EmployeeEditor instance for the selected Employee
-		EmployeeEditor editor = new EmployeeEditor(selectedRow, this);
+		EmployeeEditor editor = new(selectedRow, this);
 
 		// Hide the DataGrid to make room for the Editor view
 		this.EmployeeInfoGrid.Visibility = Visibility.Collapsed;
+		this.NewEntryGrid.Visibility     = Visibility.Collapsed;
 
 		// Position the Editor view in the MainGrid
 		Grid.SetColumn(editor, 1);
@@ -174,11 +190,17 @@ public partial class MainWindow {
 	/// <param name="e">The event arguments.</param>
 	private void EmployeeInfoGrid_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
 		// Check if an item is selected in the grid
-		// If an item is selected, make the EditButton visible
+		// If an item is selected, make the EditButton/DeleteButton visible
 		this.EditButton.Visibility = this.EmployeeInfoGrid.SelectedItem != null
 			? Visibility.Visible
 			:
-			// If no item is selected, collapse the EditButton
+			// If no item is selected, collapse the DeleteButton
+			Visibility.Collapsed;
+
+		this.DeleteButton.Visibility = this.EmployeeInfoGrid.SelectedItem != null
+			? Visibility.Visible
+			:
+			// If no item is selected, collapse the DeleteButton
 			Visibility.Collapsed;
 	}
 
@@ -196,6 +218,97 @@ public partial class MainWindow {
 		catch (Exception exception) {
 			// Log the exception
 			Debug.WriteLine(exception);
+		}
+	}
+
+	private void DayInput_OnTextChanged(object sender, TextChangedEventArgs e) {
+		if (this.DayInput.Text.Length > 1) {
+			this.MonthInput.Focus();
+		}
+	}
+
+	private void MonthInput_OnTextChanged(object sender, TextChangedEventArgs e) {
+		if (this.MonthInput.Text.Length > 1) {
+			this.YearInput.Focus();
+		}
+	}
+
+	private void YearInput_OnTextChanged(object sender, TextChangedEventArgs e) {
+		if (this.YearInput.Text.Length > 3) {
+			this.StreetInput.Focus();
+		}
+	}
+
+	private void DeleteButton_OnClick(object sender, RoutedEventArgs e) {
+		var selectedRows = this.EmployeeInfoGrid.SelectedItems.Cast<Employee>().ToList();
+		foreach (var employee in selectedRows) {
+			this._employees.Remove(employee);
+		}
+	}
+
+	private void SearchEmployees(string query) {
+		// Wenn das Suchfeld leer ist, zeige alle Mitarbeiter an
+		if (string.IsNullOrWhiteSpace(query)) {
+			EmployeeInfoGrid.ItemsSource = _employees.ToList();
+			return;
+		}
+
+		IEnumerable<Employee> filteredEmployees = _employees;
+
+		// Überprüfen, ob die Suchanfrage den ID-Filter enthält
+		if (query.StartsWith("#:")) {
+			if (int.TryParse(query.Substring(2), out int id)) {
+				filteredEmployees = _employees.Where(e => e.Id == id);
+			}
+		}
+
+		// Überprüfen, ob die Suchanfrage den Addressen-Filter enthält
+		else if (query.StartsWith("addr:")) {
+			string addressQuery = query.Substring(5).ToLower();
+			filteredEmployees = _employees.Where(e =>
+				e.Address.Any(a => a.Street.ToLower().Contains(addressQuery) ||
+								   a.City.ToLower().Contains(addressQuery) ||
+								   a.PostalCode.ToLower().Contains(addressQuery)));
+		}
+
+		// Überprüfen, ob die Suchanfrage den Positions-Filter enthält
+		else if (query.StartsWith("pos:")) {
+			string positionQuery = query.Substring(4).ToLower();
+			filteredEmployees = _employees.Where(e => e.Position.ToLower().Contains(positionQuery));
+		}
+
+		// Überprüfen, ob die Suchanfrage den Telefonnummern-Filter enthält
+		else if (query.StartsWith("phone:")) {
+			string phoneQuery = query.Substring(6).ToLower();
+			filteredEmployees = _employees.Where(e => 
+				e.Phone.Any(p => p.PhonePrefix.ToLower().Contains(phoneQuery) ||
+								 p.PhoneSuffix.ToLower().Contains(phoneQuery)));
+		}
+		
+		// Standard-String-Suche für Vorname und Nachname
+		else {
+			string nameQuery = query.ToLower();
+			filteredEmployees = _employees.Where(e =>
+				e.FirstName.ToLower().Contains(nameQuery) ||
+				e.LastName.ToLower().Contains(nameQuery));
+		}
+
+		// Aktualisiere die ItemsSource des DataGrids
+		EmployeeInfoGrid.ItemsSource = filteredEmployees.ToList();
+	}
+
+	private void SearchButton_Click(object sender, RoutedEventArgs e) {
+		SearchEmployees(this.SearchInput.Text);
+		this.SearchInput.Text = "";
+		this.SearchButton.Content = "Reset";
+	}
+
+	private void SearchInput_OnTextChanged(object sender, TextChangedEventArgs e) {
+		if (this.SearchInput.Text.Length > 0) {
+			this.SearchButton.Content = "Suchen";
+		}
+		else {
+			this.SearchButton.Content = "Reset";
 		}
 	}
 }

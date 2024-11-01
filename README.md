@@ -1,6 +1,19 @@
 # Wpf-Addressverwaltungs-Tool
 ======================
 
+<!-- TOC -->
+* [# Wpf-Addressverwaltungs-Tool](#-wpf-addressverwaltungs-tool)
+  * [## Übersicht](#-übersicht)
+  * [## Funktionen](#-funktionen)
+  * [## Anforderungen](#-anforderungen)
+  * [## Installation](#-installation)
+  * [## Sicherheit](#-sicherheit)
+  * [## Suchfunktion](#-suchfunktion)
+    * [Such-Parameter:](#such-parameter)
+  * [## Lizenz](#-lizenz)
+  * [## Kontakt](#-kontakt)
+<!-- TOC -->
+
 Eine Windows Presentation Foundation (WPF)-Anwendung zur Verwaltung von Adressen und Telefonnummern.
 
 ## Übersicht
@@ -33,6 +46,18 @@ WpfAddressverwaltung ist eine Desktop-Anwendung, die mit WPF und C# entwickelt w
 ---------
 
 WpfAddressverwaltung verwendet AES-Verschlüsselung zur Sicherung von Daten. Der Verschlüsselungsschlüssel wird sicher gespeichert und ist nur autorisierten Benutzern zugänglich.
+
+## Suchfunktion
+----------
+
+Die Liste ist mit einer Suchfunktion versehen, die die Adressen und Telefonnummern filtern kann. Dies erleichtert das Suchen von Adressen und Telefonnummern.
+### Such-Parameter:
+- **#:\<id>** Sucht nach Mitarbeitern mit der angegebenen ID
+- **addr:\<string>** Sucht nach Mitarbeitern mit dem angegebenen String in der Adresse
+- **pos:\<string>** Sucht nach Mitarbeitern mit dem angegebenen String in der Position
+
+Ist der Suchparameter leer, werden alle Mitarbeiter angezeigt.
+
 
 ## Lizenz
 -------
