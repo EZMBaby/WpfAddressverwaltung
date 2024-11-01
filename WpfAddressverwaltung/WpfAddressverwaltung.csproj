@@ -12,4 +12,19 @@
       <Folder Include="Data\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="EmployeeManagement.cs">
+        <DependentUpon>MainWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="EmployeeEdit.cs">
+        <DependentUpon>MainWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="EmployeeSearch.cs">
+        <DependentUpon>MainWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="EmployeeCollection.cs">
+        <DependentUpon>MainWindow.xaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>
